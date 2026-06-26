@@ -10,8 +10,13 @@ def checkout(request):
     cart = Cart(request)
 
     if request.method == "POST":
+        # Pega o seller do primeiro item
+        first_item = next(iter(cart), None)
+        seller = first_item['product'].seller if first_item else None
+
         order = Order.objects.create(
-            user=request.user,
+            buyer=request.user.buyerprofile,
+            seller=seller,
             total=cart.total(),
         )
 
@@ -33,29 +38,36 @@ def checkout(request):
 
     return render(request, "orders/checkout.html", {"cart": cart})
 
+
 def pedido(request, order_id):
     order = Order.objects.get(id=order_id)
     return render(request, "orders/pedido.html", {"order": order})
 
+
 @login_required
 def meus_pedidos(request):
-    pedidos = Order.objects.filter(user=request.user).order_by('-created_at')
+    pedidos = Order.objects.filter(
+        buyer=request.user.buyerprofile
+    ).order_by('-created_at')
+
     return render(request, 'orders/meus_pedidos.html', {'pedidos': pedidos})
+
 
 @login_required
 def detalhes_pedido(request, order_id):
-    pedido = get_object_or_404(Order, id=order_id, user=request.user)
+    pedido = get_object_or_404(
+        Order,
+        id=order_id,
+        buyer=request.user.buyerprofile
+    )
     return render(request, 'orders/detalhes_pedido.html', {'pedido': pedido})
+
 
 @login_required
 def calcular_frete_view(request):
-    # CEP da loja (vendedor)
-    cep_origem = request.user.seller.cep
+    cep_origem = request.user.sellerprofile.cep
+    cep_destino = request.user.buyerprofile.cep
 
-    # CEP do comprador
-    cep_destino = request.user.profile.cep
-
-    # Chama a função que consulta os Correios
     opcoes = calcular_frete(cep_origem, cep_destino)
 
     return render(request, "orders/frete.html", {
@@ -64,13 +76,16 @@ def calcular_frete_view(request):
         "cep_destino": cep_destino
     })
 
+
 def salvar_frete_pedido(request):
     if request.method == "POST":
-        frete = request.POST["frete"]  # Ex: "04014|54,20"
+        frete = request.POST["frete"]
         codigo, valor = frete.split("|")
 
-        # Pedido atual do usuário
-        order = Order.objects.filter(user=request.user, status="AGUARDANDO_FRETE").first()
+        order = Order.objects.filter(
+            buyer=request.user.buyerprofile,
+            status="AGUARDANDO_FRETE"
+        ).first()
 
         order.shipping_type = "PAC" if codigo == "04510" else "SEDEX"
         order.shipping_price = valor.replace(",", ".")
@@ -78,13 +93,14 @@ def salvar_frete_pedido(request):
         order.save()
 
         return redirect("checkout")
-    
+
+
 @login_required
 def enviar_comprovante(request, order_id):
     order = get_object_or_404(
         Order,
         id=order_id,
-        buyer=request.user.buyerprofile  # garante que o pedido é do comprador
+        buyer=request.user.buyerprofile
     )
 
     if request.method == "POST":
@@ -97,6 +113,7 @@ def enviar_comprovante(request, order_id):
             return redirect("minhas_compras")
 
     return render(request, "orders/enviar_comprovante.html", {"order": order})
+
 
 @login_required
 def minhas_compras(request):
@@ -123,6 +140,7 @@ def pedidos_recebidos(request):
         "pedidos": pedidos
     })
 
+
 @login_required
 def gerenciar_pedido(request, order_id):
     seller = request.user.sellerprofile
@@ -142,15 +160,14 @@ def gerenciar_pedido(request, order_id):
         "order": order
     })
 
+
 @login_required
 def chat_pedido(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
-    # Garantir que o usuário faz parte do pedido
     if request.user != order.buyer.user and request.user != order.seller.user:
         return HttpResponse("Acesso negado")
 
-    # Enviar mensagem
     if request.method == "POST":
         texto = request.POST.get("mensagem")
         if texto:
@@ -161,7 +178,6 @@ def chat_pedido(request, order_id):
             )
         return redirect("chat_pedido", order_id=order_id)
 
-    # Listar mensagens
     mensagens = order.messages.all().order_by("created_at")
 
     return render(request, "orders/chat.html", {

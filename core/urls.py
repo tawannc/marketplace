@@ -39,7 +39,7 @@ urlpatterns = [
     path('checkout/', checkout, name='checkout'),
     path('pedido/<int:order_id>/', pedido, name='pedido'),
     path('meus-pedidos/', meus_pedidos, name='meus_pedidos'),
-    path('pedido/<int:order_id>/', detalhes_pedido, name='detalhes_pedido'),
+    path('pedido/<int:order_id>/detalhes/', detalhes_pedido, name='detalhes_pedido'),
     path('contas/login/', login_view, name='login'),
     path('reviews/', include('reviews.urls')),
     path("frete/", calcular_frete_view, name="calcular_frete"),

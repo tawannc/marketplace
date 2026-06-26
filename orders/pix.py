@@ -1,5 +1,5 @@
 def gerar_pix(total, pedido_id):
-    chave_pix = "61991974350"
+    chave_pix = "null"
     nome_recebedor = "Marketplace"
     cidade = "GOIANIA"
 
