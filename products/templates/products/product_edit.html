@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Editar Produto</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <label>Adicionar novas imagens:</label>
+    <input type="file" name="images" multiple class="form-control">
+
+    <button class="btn btn-success mt-3">Salvar</button>
+</form>
+
+<h3 class="mt-4">Imagens atuais</h3>
+<div class="row">
+    {% for img in product.images.all %}
+    <div class="col-3">
+        <img src="{{ img.image.url }}" class="img-fluid">
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

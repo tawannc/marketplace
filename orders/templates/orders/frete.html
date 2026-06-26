@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h2>Opções de Frete</h2>
+
+<p><strong>Origem:</strong> {{ cep_origem }}</p>
+<p><strong>Destino:</strong> {{ cep_destino }}</p>
+
+<hr>
+
+{% if opcoes %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Serviço</th>
+                <th>Valor</th>
+                <th>Prazo (dias)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for servico in opcoes %}
+                <tr>
+                    <td>
+                        {% if servico.codigo == "04510" %}
+                            PAC
+                        {% elif servico.codigo == "04014" %}
+                            SEDEX
+                        {% else %}
+                            Código {{ servico.codigo }}
+                        {% endif %}
+                    </td>
+
+                    <td>R$ {{ servico.valor }}</td>
+                    <td>{{ servico.prazo }}</td>
+
+                    <td>
+                        {% if servico.erro == "0" %}
+                            OK
+                        {% else %}
+                            Erro: {{ servico.msg }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<form method="POST" action="/finalizar-frete/">
+    {% csrf_token %}
+
+    <h3>Escolha o frete</h3>
+
+    {% for servico in opcoes %}
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="frete" value="{{ servico.codigo }}|{{ servico.valor }}">
+            <label class="form-check-label">
+                {% if servico.codigo == "04510" %}
+                    PAC - R$ {{ servico.valor }} ({{ servico.prazo }} dias)
+                {% else %}
+                    SEDEX - R$ {{ servico.valor }} ({{ servico.prazo }} dias)
+                {% endif %}
+            </label>
+        </div>
+    {% endfor %}
+
+    <button class="btn btn-primary mt-3">Confirmar frete</button>
+</form>
+
+{% else %}
+    <p>Nenhuma opção de frete encontrada.</p>
+{% endif %}
+
+{% endblock %}

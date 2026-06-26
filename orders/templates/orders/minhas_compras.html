@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Minhas Compras</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Frete</th>
+            <th>Comprovante</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in pedidos %}
+        <tr>
+            <td>#{{ p.id }}</td>
+            <td>{{ p.get_status_display }}</td>
+            <td>R$ {{ p.total }}</td>
+            <td>R$ {{ p.shipping_price }}</td>
+
+            <td>
+                {% if p.pix_proof %}
+                    <a href="{{ p.pix_proof.url }}" target="_blank">Ver comprovante</a>
+                {% else %}
+                    Nenhum
+                {% endif %}
+            </td>
+
+            <td>
+                {% if not p.pix_proof %}
+                    <a href="/pedido/{{ p.id }}/comprovante/" class="btn btn-sm btn-warning">
+                        Enviar comprovante
+                    </a>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if p.status == "delivered" %}
+                    {% if not p.reviewvendedor %}
+                        <a href="{% url 'avaliar_pedido' p.id %}" class="btn btn-warning btn-sm mt-2">
+                            Avaliar pedido
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Avaliar {{ product.name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Nota:</label>
+    <select name="rating" class="form-control mb-3">
+        <option value="1">1 estrela</option>
+        <option value="2">2 estrelas</option>
+        <option value="3">3 estrelas</option>
+        <option value="4">4 estrelas</option>
+        <option value="5">5 estrelas</option>
+    </select>
+
+    <label>Comentário:</label>
+    <textarea name="comment" class="form-control mb-3"></textarea>
+
+    <button class="btn btn-primary">Enviar avaliação</button>
+</form>
+{% endblock %}

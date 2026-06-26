@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h2>Resultados para: "{{ termo }}"</h2>
+
+<hr>
+
+<h3>Produtos</h3>
+<div class="row">
+    {% for p in produtos %}
+    <div class="col-3 mb-3">
+        <div class="card">
+            {% if p.images.first %}
+                <img src="{{ p.images.first.image.url }}" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+                <h5>{{ p.name }}</h5>
+                <p>R$ {{ p.price }}</p>
+                <a href="/produto/{{ p.id }}/" class="btn btn-primary btn-sm">Ver</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p>Nenhum produto encontrado.</p>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h3>Categorias</h3>
+<ul>
+    {% for c in categorias %}
+        <li>{{ c.name }}</li>
+    {% empty %}
+        <li>Nenhuma categoria encontrada.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Lojas</h3>
+<ul>
+    {% for l in lojas %}
+        <li>
+            <a href="/loja/{{ l.id }}/">{{ l.store_name }}</a>
+        </li>
+    {% empty %}
+        <li>Nenhuma loja encontrada.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

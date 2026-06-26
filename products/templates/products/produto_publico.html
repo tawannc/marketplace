@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h1>{{ product.name }}</h1>
+
+<div class="row">
+    <div class="col-6">
+
+        {% if imagens %}
+            <img src="{{ imagens.0.image.url }}" class="img-fluid mb-3">
+
+            <div class="row">
+                {% for img in imagens %}
+                <div class="col-3">
+                    <img src="{{ img.image.url }}" class="img-thumbnail">
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Sem imagens disponíveis.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="col-6">
+        <h3>R$ {{ product.price }}</h3>
+        <p>{{ product.description }}</p>
+
+        <p><strong>Estoque:</strong> {{ product.stock }}</p>
+
+        <a href="/produtos/carrinho/add/{{ product.id }}/" class="btn btn-success btn-lg">
+            Adicionar ao carrinho
+        </a>
+
+        <hr>
+
+        <p><strong>Loja:</strong> 
+            <a href="/loja/{{ product.seller.id }}/">
+                {{ product.seller.store_name }}
+            </a>
+        </p>
+
+        <p><strong>Categoria:</strong> {{ product.category.name }}</p>
+    </div>
+</div>
+{% if product.variations.all %}
+<h4>Variações</h4>
+<ul>
+    {% for v in product.variations.all %}
+        <li>{{ v.name }}: {{ v.value }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<hr>
+
+<a href="{% url 'seller_profile' product.seller.id %}" class="btn btn-secondary mt-3">
+    Ver vendedor
+</a>
+
+<h3>Produtos relacionados</h3>
+
+<div class="row">
+    {% for r in relacionados %}
+    <div class="col-3">
+        <div class="card mb-3">
+            {% if r.images.first %}
+                <img src="{{ r.images.first.image.url }}" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ r.name }}</h5>
+                <p>R$ {{ r.price }}</p>
+                <a href="/produto/{{ r.id }}/" class="btn btn-primary btn-sm">Ver</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p>Nenhum produto relacionado.</p>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h3>Avaliações</h3>
+
+{% for r in product.reviews.all %}
+    <p><strong>{{ r.user.username }}</strong> — {{ r.rating }}/5</p>
+    <p>{{ r.comment }}</p>
+    <small>{{ r.created_at }}</small>
+    <hr>
+{% empty %}
+    <p>Nenhuma avaliação ainda.</p>
+{% endfor %}
+
+{% endblock %}
+

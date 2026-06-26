@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Vendedor: {{ seller.user.username }}</h2>
+
+<p><strong>Reputação:</strong> {{ seller.rating_average }} ⭐</p>
+
+<h3>Avaliações</h3>
+{% for review in seller.reviewvendedor_set.all %}
+    <p><strong>{{ review.rating }} ⭐</strong> - {{ review.comment }}</p>
+{% empty %}
+    <p>Este vendedor ainda não possui avaliações.</p>
+{% endfor %}
+{% endblock %}

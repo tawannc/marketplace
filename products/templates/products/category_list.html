@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Categorias</h2>
+
+<a href="/produtos/categorias/nova/" class="btn btn-primary mb-3">Nova Categoria</a>
+
+<table class="table table-striped">
+    <tr>
+        <th>Nome</th>
+        <th>Subcategoria de</th>
+        <th>Ações</th>
+    </tr>
+
+    {% for c in categories %}
+    <tr>
+        <td>{{ c.name }}</td>
+        <td>{{ c.parent.name if c.parent }}</td>
+        <td>
+            <a href="/produtos/categorias/{{ c.id }}/editar/" class="btn btn-warning btn-sm">Editar</a>
+            <a href="/produtos/categorias/{{ c.id }}/excluir/" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

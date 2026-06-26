@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Pedidos Recebidos</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Comprador</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Rastreio</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in pedidos %}
+        <tr>
+            <td>#{{ p.id }}</td>
+            <td>{{ p.buyer.user.username }}</td>
+            <td>{{ p.get_status_display }}</td>
+            <td>R$ {{ p.total }}</td>
+            <td>{{ p.tracking_code|default:"-" }}</td>
+            <td>
+                <a href="/pedido/{{ p.id }}/gerenciar/" class="btn btn-sm btn-primary">
+                    Gerenciar
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

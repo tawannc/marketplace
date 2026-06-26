@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Pedido #{{ order.id }}</h2>
+
+<p>Status: {{ order.get_status_display }}</p>
+
+<h3>Total: R$ {{ order.total }}</h3>
+
+<h4>PIX:</h4>
+<pre>{{ order.pix_code }}</pre>
+
+<p>Copie o código acima e pague no seu banco.</p>
+
+{% endblock %}

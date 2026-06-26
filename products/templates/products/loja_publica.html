@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h1>{{ seller.store_name }}</h1>
+<p>{{ seller.description }}</p>
+
+<hr>
+
+<h3>Categorias</h3>
+<ul>
+    {% for c in categorias %}
+        <li>{{ c.name }}</li>
+    {% empty %}
+        <li>Nenhuma categoria cadastrada</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Produtos</h3>
+
+<div class="row">
+    {% for p in produtos %}
+    <div class="col-3 mb-4">
+        <div class="card">
+            {% if p.images.first %}
+                <img src="{{ p.images.first.image.url }}" class="card-img-top">
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ p.name }}</h5>
+                <p class="card-text">R$ {{ p.price }}</p>
+                <a href="/produto/{{ p.id }}/" class="btn btn-primary">Ver produto</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p>Esta loja ainda não possui produtos.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

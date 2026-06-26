@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Avaliar Pedido #{{ order.id }}</h2>
+
+<p><strong>Vendedor:</strong> {{ order.seller.user.username }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Nota (1 a 5):</label>
+    <select name="rating" class="form-control mb-3">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Comentário:</label>
+    <textarea name="comment" class="form-control mb-3" placeholder="Escreva sua opinião..."></textarea>
+
+    <button class="btn btn-primary">Enviar avaliação</button>
+</form>
+{% endblock %}

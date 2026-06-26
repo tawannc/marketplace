@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Chat do Pedido #{{ order.id }}</h2>
+
+<div class="card p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+    {% for m in mensagens %}
+        <p>
+            <strong>{{ m.sender.username }}:</strong>
+            {{ m.text }} <br>
+            <small class="text-muted">{{ m.created_at }}</small>
+        </p>
+        <hr>
+    {% endfor %}
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="mensagem" class="form-control mb-2" placeholder="Digite sua mensagem"></textarea>
+    <button class="btn btn-primary">Enviar</button>
+</form>
+
+<a href="/minhas-compras/" class="btn btn-secondary mt-3">Voltar</a>
+{% endblock %}

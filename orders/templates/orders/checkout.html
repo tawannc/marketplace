@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Checkout</h2>
+
+<table class="table">
+    {% for item in cart %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>R$ {{ item.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total: R$ {{ cart.total }}</h3>
+<h3>Pagamento via PIX</h3>
+
+<div class="alert alert-info">
+    <p><strong>Chave PIX do vendedor:</strong> {{ order.seller.pix_key }}</p>
+    <p>Após o pagamento, envie o comprovante na página <strong>Minhas Compras</strong>.</p>
+</div>
+
+<a href="/minhas-compras/" class="btn btn-warning">Ir para Minhas Compras</a>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-success btn-lg">Gerar PIX</button>
+</form>
+
+{% endblock %}

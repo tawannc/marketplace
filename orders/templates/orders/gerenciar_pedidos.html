@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Gerenciar Pedido #{{ order.id }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Status:</label>
+    <select name="status" class="form-control mb-3">
+        <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Aguardando pagamento</option>
+        <option value="paid" {% if order.status == "paid" %}selected{% endif %}>Pago</option>
+        <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Enviado</option>
+        <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Entregue</option>
+        <option value="canceled" {% if order.status == "canceled" %}selected{% endif %}>Cancelado</option>
+    </select>
+
+    <label>Código de rastreio:</label>
+    <input type="text" name="tracking_code" class="form-control mb-3"
+           value="{{ order.tracking_code }}">
+
+    <button class="btn btn-success">Salvar alterações</button>
+</form>
+
+{% endblock %}
