@@ -20,8 +20,8 @@ venv para isolamento do ambiente
 
 # Instalação, Configuração e Execução
 1️⃣ Clonar o repositório
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/tawannc/marketplace
+cd marketplace
 2️⃣ Criar e ativar o ambiente virtual
 python -m venv venv
 source venv/bin/activate   # Linux/Mac
